@@ -45,7 +45,7 @@ class LoginApp(QWidget):
         layout.addWidget(self.LineEdit["Password"], 1, 1, 1, 3)#coloca na tela e define a posicao x, y depois o tamanho x, y
 
         loginButton = QPushButton('log-in')
-        layout.addWidget(loginButton,               4, 3, 1, 1)
+        layout.addWidget(loginButton,               4, 3, 1, 5)
 
         self.status = QLabel('')
         self.status.setStyleSheet('font-size:20px; color:red;')
