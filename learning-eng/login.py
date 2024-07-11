@@ -68,8 +68,11 @@ class LoginApp(QWidget):
             password = self.LineEdit['Password'].text()
             
             query = QSqlQuery()#variavel para consulta da database
+            #abaixo ele verifica no banco de dados se tem input correto
+            query.prepare('SELECT * FROM Users WHERE Username=:username')#para todos da lista usuarios onde Usuario = input 
             
-
+            query.exec()
+            
 
 if __name__ == "__main__":
 
