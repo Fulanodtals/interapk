@@ -49,18 +49,18 @@ class LoginApp(QWidget):
         layout.addWidget(loginButton,               4, 3, 1, 1)
 
         self.status = QLabel('')
-        self.status.setStyleSheet('font-size:15px; color:red;')
+        self.status.setStyleSheet('font-size:12px; color:red;')
         layout.addWidget(self.status, 4, 0, 1, 1)
 
-        self.conectDB()#aplicando metodo no main
+        #self.conectDB()#aplicando metodo no main
 
-    def conectDB(self):
+    def conectDB(self):#trocar database
         #https://doc.qt.io/qt-5/sql-driver.html
-        db = QSqlDatabase.addDatabase('QODBC')#coloque o tipo de database disponivel no link acima
+        self.db = QSqlDatabase.addDatabase('QODBC')#coloque o tipo de database disponivel no link acima
         #definindo a string de conexao para conectar com o banco de dados
-        db.setDatabaseName('DRIVER={{Microsoft Access Driver(*.mdb, *.accdb)}};DBQ={0}'.format(os.path.join(os.getcwd(), 'MyDatabase.accdb')))
+        self.db.setDatabaseName('DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=MyDatabase.accdb')
 
-        if not db.open():#aplicando uma execao para caso nao funcione 
+        if not self.db.open():#aplicando uma execao para caso nao funcione 
             print('error in database conection')
             self.status.setText('conecion failed, try again later.')
 
@@ -70,11 +70,24 @@ class LoginApp(QWidget):
         username = self.LineEdit['Username'].text()
         password = self.LineEdit['Password'].text()
         
-        query = QSqlQuery()#variavel para consulta da database
+        user = ['ana', 'paula']
+
+        if username == user[0]:
+            if password == user[1]:
+                sleep(1)
+                self.mainApp = MainApp()
+                self.mainApp.show()
+                LoginWindow.close()
+            else:
+                self.status.setText('password incorrect')
+        else:
+            self.status.setText('username not found')
+        '''query = QSqlQuery(self.db)#variavel para consulta da database
         #abaixo ele verifica no banco de dados se tem input correto
-        query.prepare('SELECT * FROM Users WHERE Username=:username')#para todos da lista usuarios onde Usuario = input 
+        query.prepare('SELECT * FROM Users WHERE Username = :username')#para todos da lista usuarios onde Usuario = input 
         query.bindValue(':Username', username)#ve se tem o input na lista
         query.exec()#executa
+
 
         if query.first():
             if query.value('Password') == password:
@@ -86,10 +99,11 @@ class LoginApp(QWidget):
                 self.status.setText('password incorrect')
         else:
             self.status.setText("username not found")
+
+        self.db.close()'''
             
 
 if __name__ == "__main__":
-
     app = QApplication(sys.argv)
     
     LoginWindow = LoginApp()
