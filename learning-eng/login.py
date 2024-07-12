@@ -1,6 +1,6 @@
 import sys
 import os
-import time
+from time import sleep
 from PyQt6.QtWidgets import QApplication, QWidget,QPushButton, QLineEdit, QLabel, QGridLayout, QSizePolicy
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery #blibliotecas para mecher com o banco de dados (microsoft acess)
 
@@ -45,33 +45,47 @@ class LoginApp(QWidget):
         layout.addWidget(self.LineEdit["Password"], 1, 1, 1, 3)#coloca na tela e define a posicao x, y depois o tamanho x, y
 
         loginButton = QPushButton('log-in')
-        layout.addWidget(loginButton,               4, 3, 1, 5)
+        loginButton.released.connect(self.UserCheck)#conectando metodo ao botao
+        layout.addWidget(loginButton,               4, 3, 1, 1)
 
         self.status = QLabel('')
-        self.status.setStyleSheet('font-size:20px; color:red;')
+        self.status.setStyleSheet('font-size:15px; color:red;')
         layout.addWidget(self.status, 4, 0, 1, 1)
 
-        def conectDB(self):
-            #https://doc.qt.io/qt-5/sql-driver.html
-            db = QSqlDatabase.addDatabase('QODBC')#coloque o tipo de database disponivel no link acima
-            #definindo a string de conexao para conectar com o banco de dados
-            db.setDatabaseName('DRIVER={{Microsoft Acess Driver(*.mdb, *.accdb)}};DBQ={0}'.format(os.path.join(os.getcwd(), 'MyDatabase.accdb')))
+        self.conectDB()#aplicando metodo no main
 
-            if not db.open():#aplicando uma execao para caso nao funcione 
-                print('error in database conection')
-                self.status.setText('conecion failed, try again later.')
+    def conectDB(self):
+        #https://doc.qt.io/qt-5/sql-driver.html
+        db = QSqlDatabase.addDatabase('QODBC')#coloque o tipo de database disponivel no link acima
+        #definindo a string de conexao para conectar com o banco de dados
+        db.setDatabaseName('DRIVER={{Microsoft Access Driver(*.mdb, *.accdb)}};DBQ={0}'.format(os.path.join(os.getcwd(), 'MyDatabase.accdb')))
 
-    
-        def UserCheck(self):
-            #pegando o input do usuario
-            username = self.LineEdit['Username'].text()
-            password = self.LineEdit['Password'].text()
-            
-            query = QSqlQuery()#variavel para consulta da database
-            #abaixo ele verifica no banco de dados se tem input correto
-            query.prepare('SELECT * FROM Users WHERE Username=:username')#para todos da lista usuarios onde Usuario = input 
-            
-            query.exec()
+        if not db.open():#aplicando uma execao para caso nao funcione 
+            print('error in database conection')
+            self.status.setText('conecion failed, try again later.')
+
+
+    def UserCheck(self):
+        #pegando o input do usuario
+        username = self.LineEdit['Username'].text()
+        password = self.LineEdit['Password'].text()
+        
+        query = QSqlQuery()#variavel para consulta da database
+        #abaixo ele verifica no banco de dados se tem input correto
+        query.prepare('SELECT * FROM Users WHERE Username=:username')#para todos da lista usuarios onde Usuario = input 
+        query.bindValue(':Username', username)#ve se tem o input na lista
+        query.exec()#executa
+
+        if query.first():
+            if query.value('Password') == password:
+                sleep(1)
+                self.mainApp = MainApp()
+                self.mainApp.show()
+                self.mainApp.close()
+            else:
+                self.status.setText('password incorrect')
+        else:
+            self.status.setText("username not found")
             
 
 if __name__ == "__main__":
