@@ -49,7 +49,7 @@ class MyApp(QWidget):
         #procura o arquivo e dita o titulo da janela
         self.exel_dir, _ = QFileDialog.getOpenFileName(self.getFile, "selecione arquivo")
         df = pd.read_excel(self.exel_dir, self.sheetName)#cria uma instancia que ira ler o exel
-        print('asdqw')
+
         if df.size == 0:#condicao se nao conseguir pegar o exel
             return # vai apenas retornar
 
