@@ -24,7 +24,7 @@ class LoginApp(QWidget):
 
         label = {}#chaves pq vai criar varias dessa
         self.LineEdit = {}#chaves pq vai criar varias dessa
-
+        
         #pode acessar essa variavel por label["nome"]
         label["Username"] = QLabel('Username: ')#criando a label username
         label["Password"] = QLabel('Password: ')#criando a label password

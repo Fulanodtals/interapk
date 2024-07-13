@@ -1,8 +1,6 @@
 import sys
-import os
-from time import sleep
-from PyQt6.QtWidgets import QApplication, QWidget,QPushButton, QLineEdit, QLabel, QGridLayout, QSizePolicy
-from PyQt6.QtSql import QSqlDatabase, QSqlQuery #blibliotecas para mecher com o banco de dados (microsoft acess)
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QLabel, QGridLayout, QSizePolicy, QVBoxLayout
+from PyQt6.QtCore import Qt
 import pandas as pd
 
 #classe da tela principal
@@ -18,13 +16,17 @@ class LoginApp(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("main")
-        self.setFixedSize(450, 150)
+        self.setFixedSize(350, 200)
 
         layout = QGridLayout()
         self.setLayout(layout)
 
         label = {}
         self.LineEdit = {}
+
+        label["login"] = QLabel('Login')
+        label['login'].setStyleSheet('font-size:20px;')
+
 
         label["Username"] = QLabel('Username: ')
         label["Password"] = QLabel('Password: ')
@@ -36,18 +38,20 @@ class LoginApp(QWidget):
         self.LineEdit["Password"] = QLineEdit()
         self.LineEdit["Password"].setEchoMode(QLineEdit.EchoMode.Password)
         
-        layout.addWidget(label["Username"],         0, 0, 1, 1)
-        layout.addWidget(self.LineEdit['Username'], 0, 1, 1, 3)
-        layout.addWidget(label["Password"],         1, 0, 1, 1)
-        layout.addWidget(self.LineEdit["Password"], 1, 1, 1, 3)
+        layout.addWidget(label['login'],            0, 0, 1, 3, Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(label["Username"],         1, 0, 1, 1)
+        layout.addWidget(self.LineEdit['Username'], 2, 0, 1, 3)
+        layout.addWidget(label["Password"],         3, 0, 1, 1)
+        layout.addWidget(self.LineEdit["Password"], 4, 0, 1, 3)
 
         loginButton = QPushButton('log-in')
         loginButton.released.connect(self.UserCheck)
-        layout.addWidget(loginButton,               4, 3, 1, 1)
+        layout.addWidget(loginButton,               5, 2, 1, 1)
+
 
         self.status = QLabel('')
         self.status.setStyleSheet('font-size:12px; color:red;')
-        layout.addWidget(self.status, 4, 0, 1, 1)
+        layout.addWidget(self.status, 5, 0, 1, 1)
 
 
     def UserCheck(self):
