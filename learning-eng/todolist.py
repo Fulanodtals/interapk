@@ -19,11 +19,10 @@ class MainApp(QWidget):
 
         self.list = QListWidget(self)
         self.list.addItems(['tarefa 1', 'tarefa 2', 'tarefa 3'])
-        #self.list.currentItemChanged.connect(self.changedItem)
         self.list.setStyleSheet('font-size:15px;')
+
         addItemButton = QPushButton('add item')
         addItemButton.clicked.connect(self.addItem)
-
         deleteItemButton = QPushButton('delete item')
         deleteItemButton.clicked.connect(self.deleteItem)
 
@@ -34,24 +33,30 @@ class MainApp(QWidget):
             layout.addWidget(widget)
         
     def addItem(self):
-        self.additem = AddItem(self)
+        self.additem = AddItem(self, 0)
         self.additem.show()
 
     def deleteItem(self):
         if len(self.list)>0:
             self.list.takeItem(self.list.currentRow())
-
+    
+    def editItem(self):
+        pass
 
     def changedItem(self, item):
         if len(self.list)>0:
             print(f'item selecionado: {item.text()}')
 
 class AddItem(QWidget):
-    def __init__(self, mainWindow):
+    def __init__(self, mainWindow, choise):
         super().__init__()
         self.mainWindow = mainWindow
         self.setWindowTitle("main")
         self.setFixedSize(300, 400)
+        if choise == 0:
+            self.addingItem
+
+    def addingItem(self):
 
 
 if __name__ == "__main__":
