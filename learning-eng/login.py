@@ -2,7 +2,7 @@ import sys
 import os
 from time import sleep
 from PyQt6.QtWidgets import QApplication, QWidget,QPushButton, QLineEdit, QLabel, QGridLayout, QSizePolicy
-from PyQt6.QtSql import QSqlDatabase, QSqlQuery #blibliotecas para mecher com o banco de dados (microsoft acess)
+import pandas as pd #biblioteca para ver exel
 
 #classe da tela principal
 class MainApp(QWidget):
@@ -69,39 +69,19 @@ class LoginApp(QWidget):
         #pegando o input do usuario
         username = self.LineEdit['Username'].text()
         password = self.LineEdit['Password'].text()
-        
-        user = ['ana', 'paula']
+        users = pd.read_excel('./Users.xlsx')
 
-        if username == user[0]:
-            if password == user[1]:
-                sleep(1)
-                self.mainApp = MainApp()
-                self.mainApp.show()
-                LoginWindow.close()
+        for user in users['Username']:
+            if user == username:
+                for code in users['Password']:
+                    if code == password:
+                        self.mainApp = MainApp()
+                        self.mainApp.show()
+                        LoginWindow.close()
+                    else:
+                        self.status.setText('password incorrect')
             else:
-                self.status.setText('password incorrect')
-        else:
-            self.status.setText('username not found')
-        '''query = QSqlQuery(self.db)#variavel para consulta da database
-        #abaixo ele verifica no banco de dados se tem input correto
-        query.prepare('SELECT * FROM Users WHERE Username = :username')#para todos da lista usuarios onde Usuario = input 
-        query.bindValue(':Username', username)#ve se tem o input na lista
-        query.exec()#executa
-
-
-        if query.first():
-            if query.value('Password') == password:
-                sleep(1)
-                self.mainApp = MainApp()
-                self.mainApp.show()
-                self.mainApp.close()
-            else:
-                self.status.setText('password incorrect')
-        else:
-            self.status.setText("username not found")
-
-        self.db.close()'''
-            
+                self.status.setText('username not found')
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
