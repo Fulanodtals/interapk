@@ -20,9 +20,9 @@ class MainApp(QWidget):
         self.list = QListWidget(self)
         self.list.addItems(['tarefa 1', 'tarefa 2', 'tarefa 3'])
         self.list.setStyleSheet('font-size:15px;')
-
+        #self.list.doubleClicked.connect()
         addItemButton = QPushButton('add item')
-        addItemButton.clicked.connect(self.addItem)
+        addItemButton.clicked.connect(self.add_item)
         deleteItemButton = QPushButton('delete item')
         deleteItemButton.clicked.connect(self.deleteItem)
 
@@ -32,29 +32,29 @@ class MainApp(QWidget):
         for widget in widgets:
             layout.addWidget(widget)
         
-    def addItem(self):
-        self.additem = AddItem(self, 0)
+    def add_item(self):
+        self.additem = AddItem(self)
         self.additem.show()
 
-    def deleteItem(self):
-        if len(self.list)>0:
-            self.list.takeItem(self.list.currentRow())
-    
+    def addTesk(self, tesk):
+        print(tesk)        
+        self.list.addItem(tesk)
     def editItem(self):
         pass
+
+    def deleteItem(self):
+        self.list.takeItem(self.list.currentRow())
 
     def changedItem(self, item):
         if len(self.list)>0:
             print(f'item selecionado: {item.text()}')
 
 class AddItem(QWidget):
-    def __init__(self, mainWindow, choise):
+    def __init__(self, main_app):
         super().__init__()
-        self.mainWindow = mainWindow
+        self.main_app = main_app
         self.setWindowTitle("main")
         self.setFixedSize(200, 300)
-        if choise == 0:
-            self.addingItem
 
         layout = QVBoxLayout()
         self.setLayout(layout)
@@ -67,25 +67,16 @@ class AddItem(QWidget):
         self.tarefa = QLineEdit()
 
         button = QPushButton('adicionar')
-        button.clicked.connect(self.addTask)
+        button.clicked.connect(self.sendTesk)
 
         widgets = [label, pergunta, self.tarefa, button]
         for widget in widgets:
             layout.addWidget(widget)
 
-    def addTask(self):
+    def sendTesk(self):
         tesk = self.tarefa.text()
-        print(tesk)
-        
-
-    
-
-    def addingItem(self):
-        pass
-        
-        
-
-
+        self.main_app.addTesk(tesk)
+        self.close()
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     
