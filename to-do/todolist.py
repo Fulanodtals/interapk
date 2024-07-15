@@ -1,7 +1,7 @@
 import sys
 import os
 from time import sleep
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QListWidget, QAbstractItemView, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QListWidget, QAbstractItemView, QVBoxLayout, QLabel, QLineEdit
 from PyQt6.QtCore import Qt
 
 class MainApp(QWidget):
@@ -52,11 +52,38 @@ class AddItem(QWidget):
         super().__init__()
         self.mainWindow = mainWindow
         self.setWindowTitle("main")
-        self.setFixedSize(300, 400)
+        self.setFixedSize(200, 300)
         if choise == 0:
             self.addingItem
 
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        label = QLabel('NOVA TAREFA')
+        label.setStyleSheet('font-size: 20px;font-weight:bold;')
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        pergunta = QLabel('qual sera a nova tarefa?')
+        self.tarefa = QLineEdit()
+
+        button = QPushButton('adicionar')
+        button.clicked.connect(self.addTask)
+
+        widgets = [label, pergunta, self.tarefa, button]
+        for widget in widgets:
+            layout.addWidget(widget)
+
+    def addTask(self):
+        tesk = self.tarefa.text()
+        print(tesk)
+        
+
+    
+
     def addingItem(self):
+        pass
+        
+        
 
 
 if __name__ == "__main__":
