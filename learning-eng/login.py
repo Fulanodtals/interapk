@@ -52,19 +52,6 @@ class LoginApp(QWidget):
         self.status.setStyleSheet('font-size:12px; color:red;')
         layout.addWidget(self.status, 4, 0, 1, 1)
 
-        #self.conectDB()#aplicando metodo no main
-
-    def conectDB(self):#trocar database
-        #https://doc.qt.io/qt-5/sql-driver.html
-        self.db = QSqlDatabase.addDatabase('QODBC')#coloque o tipo de database disponivel no link acima
-        #definindo a string de conexao para conectar com o banco de dados
-        self.db.setDatabaseName('DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=MyDatabase.accdb')
-
-        if not self.db.open():#aplicando uma execao para caso nao funcione 
-            print('error in database conection')
-            self.status.setText('conecion failed, try again later.')
-
-
     def UserCheck(self):
         #pegando o input do usuario
         username = self.LineEdit['Username'].text()

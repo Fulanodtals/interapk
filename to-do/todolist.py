@@ -1,8 +1,9 @@
 import sys
 import os
 from time import sleep
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QListWidget, QAbstractItemView, QVBoxLayout, QLabel, QLineEdit
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QListWidget,QMessageBox, QVBoxLayout, QLabel, QLineEdit
 from PyQt6.QtCore import Qt
+import pandas as pd
 
 class MainApp(QWidget):
     def __init__(self):
@@ -17,18 +18,18 @@ class MainApp(QWidget):
         label.setStyleSheet('font-size: 20px;font-weight:bold;')
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
+    
         self.list = QListWidget(self)
         self.list.addItems(['tarefa 1', 'tarefa 2', 'tarefa 3'])
         self.list.setStyleSheet('font-size:15px;')
-        #self.list.doubleClicked.connect()
-        addItemButton = QPushButton('add item')
+        self.list.doubleClicked.connect(self.deleteItem)
+        addItemButton = QPushButton('Nova tarefa')
+        addItemButton.setStyleSheet('padding:10px;font-size:20px;')
         addItemButton.clicked.connect(self.add_item)
-        deleteItemButton = QPushButton('delete item')
-        deleteItemButton.clicked.connect(self.deleteItem)
 
 
         #adicionando widgets na tela
-        widgets = [label, self.list, addItemButton, deleteItemButton]
+        widgets = [label, self.list, addItemButton]
         for widget in widgets:
             layout.addWidget(widget)
         
@@ -36,14 +37,16 @@ class MainApp(QWidget):
         self.additem = AddItem(self)
         self.additem.show()
 
-    def addTesk(self, tesk):
-        print(tesk)        
+    def addTesk(self, tesk):    
         self.list.addItem(tesk)
-    def editItem(self):
-        pass
 
     def deleteItem(self):
-        self.list.takeItem(self.list.currentRow())
+        selectItem = self.list.selectedItems()
+        if not selectItem:
+            QMessageBox.information(self, "No Selection", "Please select an item to delete.")
+            return
+        for item in selectItem:
+            self.list.takeItem(self.list.currentRow())
 
     def changedItem(self, item):
         if len(self.list)>0:
@@ -77,6 +80,8 @@ class AddItem(QWidget):
         tesk = self.tarefa.text()
         self.main_app.addTesk(tesk)
         self.close()
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     
