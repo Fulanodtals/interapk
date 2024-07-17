@@ -20,25 +20,33 @@ class MainApp(QWidget):
 
     
         self.list = QListWidget(self)
-        self.list.addItems(['tarefa 1', 'tarefa 2', 'tarefa 3'])
+
+        df = pd.read_excel('./notas.xlsx', header=None)
+        self.db = df.iloc[:, 0].tolist()
+        for item in self.db:
+            print(item)
+            self.list.addItem(item)
         self.list.setStyleSheet('font-size:15px;')
         self.list.doubleClicked.connect(self.deleteItem)
+
         addItemButton = QPushButton('Nova tarefa')
         addItemButton.setStyleSheet('padding:10px;font-size:20px;')
         addItemButton.clicked.connect(self.add_item)
-
+ 
 
         #adicionando widgets na tela
         widgets = [label, self.list, addItemButton]
         for widget in widgets:
             layout.addWidget(widget)
         
+
     def add_item(self):
         self.additem = AddItem(self)
         self.additem.show()
 
-    def addTesk(self, tesk):    
-        self.list.addItem(tesk)
+    def addTesk(self, tesk):  
+        self.db.append(tesk)
+        #self.list.addItem(tesk)
 
     def deleteItem(self):
         selectItem = self.list.selectedItems()
@@ -46,6 +54,7 @@ class MainApp(QWidget):
             QMessageBox.information(self, "No Selection", "Please select an item to delete.")
             return
         for item in selectItem:
+            #self.db.remove()
             self.list.takeItem(self.list.currentRow())
 
     def changedItem(self, item):
