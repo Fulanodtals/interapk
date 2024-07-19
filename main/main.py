@@ -1,8 +1,8 @@
 import sys
+import socket
 import os
-from time import sleep
-from PyQt6.QtWidgets import QApplication, QWidget, QLineEdit, QLabel, QVBoxLayout, QListWidget
-import pandas as pd #biblioteca para ver exel
+from PyQt6.QtWidgets import QApplication, QWidget, QLineEdit, QLabel, QVBoxLayout, QListWidget, QGridLayout
+from PyQt6.QtGui import QIntValidator
 from PyQt6.QtCore import Qt
 
 class MainApp(QWidget):
@@ -12,18 +12,42 @@ class MainApp(QWidget):
         self.resize(300, 400)
         
         layout = QVBoxLayout()
-        self.setLayout(layout)
+        gridWidget = QWidget()
+        gridLayout = QGridLayout()
 
         title = QLabel('Remote Control')
         title.setStyleSheet('font-size: 20px;font-weight:bold;')
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
+        self.label = {}
+        self.userInput = {}
+
+        self.label['ip'] = QLabel() 
+        self.label['port'] = QLabel() 
+        self.userInput['ip'] = QLineEdit().setValidator(QIntValidator())
+        self.userInput['port'] = QLineEdit().setValidator(QIntValidator())
+
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.bind((self.userInput['ip'].text(), self.userInput['port'].text()))
+        server.listen()
+
+        
+        gridLayout.setLayout(gridWidget)
+
+        self.layout.addWidget(self.gridWidget)
+        self.setLayout(layout)
+
         self.list = QListWidget()
 
-        widgets = [title, self.list]
-        for widget in widgets:
-            layout.addWidget(widget)
-        
+        vWidgets = [title, self.list]
+        for vwidget in vWidgets:
+            layout.addWidget(vwidget)
+
+        gridLayout.addWidget(self.label['ip'],       )
+        gridLayout.addWidget(self.label['port'],     )
+        gridLayout.addWidget(self.userInput['ip'],   )
+        gridLayout.addWidget(self.userInput['port'], )
+
 
 
 if __name__ == "__main__":
