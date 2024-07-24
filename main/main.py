@@ -9,11 +9,10 @@ class MainApp(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("main")
-        self.resize(300, 400)
+        self.setFixedSize(300,400)
         
-        layout = QVBoxLayout()
-        gridWidget = QWidget()
-        gridLayout = QGridLayout()
+        layout = QGridLayout()
+        self.setLayout(layout)
 
         title = QLabel('Remote Control')
         title.setStyleSheet('font-size: 20px;font-weight:bold;')
@@ -22,32 +21,31 @@ class MainApp(QWidget):
         self.label = {}
         self.userInput = {}
 
-        self.label['ip'] = QLabel() 
-        self.label['port'] = QLabel() 
-        self.userInput['ip'] = QLineEdit().setValidator(QIntValidator())
-        self.userInput['port'] = QLineEdit().setValidator(QIntValidator())
-
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind((self.userInput['ip'].text(), self.userInput['port'].text()))
-        server.listen()
-
+        self.label['ip'] = QLabel('ip') 
+        self.label['port'] = QLabel('port') 
+        self.userInput['ip'] = QLineEdit()
+        self.userInput['port'] = QLineEdit()
         
-        gridLayout.setLayout(gridWidget)
-
-        self.layout.addWidget(self.gridWidget)
-        self.setLayout(layout)
 
         self.list = QListWidget()
 
-        vWidgets = [title, self.list]
-        for vwidget in vWidgets:
-            layout.addWidget(vwidget)
+        
+        layout.addWidget(title,                  0,0,1,2)
+        layout.addWidget(self.label['ip'],       1,0,1,1)
+        layout.addWidget(self.label['port'],     1,1,1,1)
+        layout.addWidget(self.userInput['ip'],   2,0,1,1)
+        layout.addWidget(self.userInput['port'], 2,1,1,1)
+        layout.addWidget(self.list,              3,0,1,2)
+        
+        self.conectCF
 
-        gridLayout.addWidget(self.label['ip'],       )
-        gridLayout.addWidget(self.label['port'],     )
-        gridLayout.addWidget(self.userInput['ip'],   )
-        gridLayout.addWidget(self.userInput['port'], )
+    def conectCF(self):
+        ip = self.userInput['ip'].text()
+        port = self.userInput['port'].text()
 
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.bind((ip, port))
+        server.listen()
 
 
 if __name__ == "__main__":
