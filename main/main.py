@@ -39,6 +39,7 @@ class MainApp(QWidget):
         
         self.conectCF
 
+
     def conectCF(self):
         ip = self.userInput['ip'].text()
         port = self.userInput['port'].text()
@@ -46,6 +47,12 @@ class MainApp(QWidget):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((ip, port))
         server.listen()
+
+        while True:
+            running, addr = server.accept()
+            mensage = running.recv(1024).decode('utf-8')
+            
+            running.close()
 
 
 if __name__ == "__main__":
