@@ -23,8 +23,8 @@ class MainApp(QWidget):
 
         self.label['ip'] = QLabel('ip') 
         self.label['port'] = QLabel('port') 
-        self.userInput['ip'] = QLineEdit()
-        self.userInput['port'] = QLineEdit()
+        self.userInput['ip'] = QLineEdit('0.0.0.0')
+        self.userInput['port'] = QLineEdit('12345')
         
 
         self.list = QListWidget()
@@ -37,21 +37,28 @@ class MainApp(QWidget):
         layout.addWidget(self.userInput['port'], 2,1,1,1)
         layout.addWidget(self.list,              3,0,1,2)
         
+
         self.conectCF
-
-
+        
     def conectCF(self):
         ip = self.userInput['ip'].text()
         port = self.userInput['port'].text()
-
+        
+        print('iniciando server')
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind((ip, port))
+        server.bind(('0.0.0.0', port))
         server.listen()
 
         while True:
+            print('analizando')
             running, addr = server.accept()
             mensage = running.recv(1024).decode('utf-8')
+
+            print(f'decodificando: {mensage}')
             
+            if mensage == 'desligar':
+                print('desligando')
+
             running.close()
 
 
